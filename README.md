@@ -36,7 +36,7 @@ import trimesh
 def convert_to_stl(input_folder: str, output_folder: str):
 ```
 
-generate_ply_folders(input_folder, output_folder, number_of_points)
+`generate_ply_folders(input_folder, output_folder, number_of_points)`
 
 Generates PLY folders by converting STEP files to STL and sampling points.
 
@@ -53,7 +53,7 @@ import open3d
 def generate_ply_folders(input_folder: str, output_folder: str, number_of_points: list):
 ```
 
-generate_dataset_from_step(dataset_path, number_of_points=[1000, 5000, 10000])
+`generate_dataset_from_step(dataset_path, number_of_points=[1000, 5000, 10000])`
 
 Generates a dataset from a given STEP file directory.
 
