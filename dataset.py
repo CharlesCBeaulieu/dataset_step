@@ -94,7 +94,7 @@ def generate_dataset_from_step(
     """
     input_folder = Path(dataset_path)
     output_folder = (
-        input_folder.parent / "output"
+        input_folder.parent / "ply"
     )  # Assuming 'output' folder in the same parent directory
     generate_ply_folders(input_folder, output_folder, number_of_points)
 
