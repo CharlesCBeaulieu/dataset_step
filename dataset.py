@@ -100,5 +100,5 @@ def generate_dataset_from_step(
 
 
 if __name__ == "__main__":
-    dataset_path = "data/step_test"
+    dataset_path = "dataset_step/data/step_test"
     generate_dataset_from_step(dataset_path, [1000, 5000, 10000])
