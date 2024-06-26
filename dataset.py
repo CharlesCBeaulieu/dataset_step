@@ -3,18 +3,17 @@ import open3d
 import trimesh
 
 
-def convert_to_stl(input_folder: str, output_folder: str):
+def convert_to_stl(input_folder: str, stl_folder: str):
     """
-    Convert STEP files in the input folder to STL format and save them in the output folder.
+    Convert STEP files in the input folder to STL format and save them in the STL folder.
 
     Args:
         input_folder (str): Path to the folder containing the STEP files.
-        output_folder (str): Path to the folder where the converted STL files will be saved.
+        stl_folder (str): Path to the folder where the converted STL files will be saved.
     """
     input_folder = Path(input_folder)
-    output_folder = Path(output_folder)
-    output_stl_folder = output_folder / "stl"
-    output_stl_folder.mkdir(parents=True, exist_ok=True)
+    stl_folder = Path(stl_folder)
+    stl_folder.mkdir(parents=True, exist_ok=True)
 
     for file in input_folder.iterdir():
         if (
@@ -29,38 +28,33 @@ def convert_to_stl(input_folder: str, output_folder: str):
                         file_name=str(file), gmsh_args=[("Mesh.Algorithm", 5)]
                     )
                 )
-                mesh.export(str(output_stl_folder / (file.stem + ".stl")))
+                mesh.export(str(stl_folder / (file.stem + ".stl")))
             except Exception as e:
                 print(f"Error processing file {file}: {e}")
 
 
-def generate_ply_folders(input_folder: str, output_folder: str, number_of_points: list):
+def generate_ply_folders(stl_folder: str, ply_folder: str, number_of_points: list):
     """
-    Generate PLY folders by converting STEP files to STL and sampling points.
+    Generate PLY folders by sampling points from STL files.
 
     Args:
-        input_folder (str): The path to the input folder containing STEP files.
-        output_folder (str): The path to the output folder where the PLY folders will be generated.
+        stl_folder (str): The path to the folder containing STL files.
+        ply_folder (str): The path to the folder where the PLY folders will be generated.
         number_of_points (list): A list of integers representing the number of points to sample.
 
     Returns:
         None
     """
-    input_folder = Path(input_folder)
-    output_folder = Path(output_folder)
-    output_folder.mkdir(parents=True, exist_ok=True)
+    stl_folder = Path(stl_folder)
+    ply_folder = Path(ply_folder)
+    ply_folder.mkdir(parents=True, exist_ok=True)
 
-    # First, convert all STEP files to STL in the 'stl' subfolder
-    convert_to_stl(input_folder, output_folder)
-
-    # Now process the generated STL files
+    # Process the STL files
     for num_points in number_of_points:
         # Create subfolder for the current number of points
-        subfolder = output_folder / str(num_points)
+        subfolder = ply_folder / str(num_points)
         subfolder.mkdir(parents=True, exist_ok=True)
 
-        # Locate STL files in the 'stl' subfolder
-        stl_folder = output_folder / "stl"
         for file in stl_folder.iterdir():
             if (
                 file.is_file()
@@ -73,7 +67,7 @@ def generate_ply_folders(input_folder: str, output_folder: str, number_of_points
                     sampled_pcd = pcd.sample_points_poisson_disk(num_points)
 
                     # Save the sampled point cloud to a PLY file in the appropriate subfolder
-                    ply_output_file = subfolder / (file.stem + ".ply")
+                    ply_output_file = subfolder / (file.stem + f"_{num_points}.ply")
                     open3d.io.write_point_cloud(str(ply_output_file), sampled_pcd)
                 except Exception as e:
                     print(f"Error processing file {file}: {e}")
@@ -93,12 +87,17 @@ def generate_dataset_from_step(
         None
     """
     input_folder = Path(dataset_path)
-    output_folder = (
-        input_folder.parent / "ply"
-    )  # Assuming 'output' folder in the same parent directory
-    generate_ply_folders(input_folder, output_folder, number_of_points)
+    output_folder = input_folder.parent
+    stl_folder = output_folder / "stl"
+    ply_folder = output_folder / "ply"
+
+    # Convert STEP files to STL
+    convert_to_stl(input_folder, stl_folder)
+
+    # Generate PLY folders
+    generate_ply_folders(stl_folder, ply_folder, number_of_points)
 
 
 if __name__ == "__main__":
-    dataset_path = "dataset_step/data/step_test"
+    dataset_path = "dataset_step/data/STEP_test"
     generate_dataset_from_step(dataset_path, [1000, 5000, 10000])
