@@ -82,42 +82,42 @@ This script assumes the presence of STEP files in the specified dataset_path. It
 
 Before running the code : 
 ```
-dataset
-│   STEP_files 
-│   │   772805.stp 
-│   │   772806.stp 
-│   │   ...
-│   
+data
+└─── stp
+│    │   772805.stp
+│    │   772806.stp
+│    │   ...
+
 ```
 
 After running the code : 
 
-```
-dataset
-│   STEP_files 
-│   │   772805.stp 
-│   │   772806.stp 
-│   │   ...
-│   
-└─── ply
-│   │
-│   └───1000
-│   │    │   772805.ply
-│   │    │   772806.ply
-│   │    │   ...
-│   │
-│   └───5000
-│   │    │   772805.ply
-│   │    │   772806.ply
-│   │    │   ...
-│   │
-│   └───10000
-│   │    │   772805.ply
-│   │    │   772806.ply
-│   │    │   ...
-│   
+```   
+data
+└─── stp
+│    │   772805.stp
+│    │   772806.stp
+│    │   ...
+│ 
 └─── stl
-│   │   772805.stl
-│   │   772806.stl
-│   │   ...
+│    │   772805.stl
+│    │   772806.stl
+│    │   ...
+│
+└─── ply
+        └───1000
+        │    │   772805_1000.ply
+        │    │   772806_1000.ply
+        │    │   ...
+        │
+        └───5000
+        │    │   772805_5000.ply
+        │    │   772806_5000.ply
+        │    │   ...
+        │
+        └───10000
+            │   772805_10000.ply
+            │   772806_10000.ply
+            │   ...
+            
 ```
