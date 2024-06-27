@@ -11,7 +11,7 @@ class PointCloudDataset(Dataset):
             data_folder (str): Path to the folder containing PLY files organized by the number of points.
             point_numbers (list): List of point numbers used for subfolders.
         """
-        self.data_folder = Path(data_folder) / "ply"
+        self.data_folder = Path(data_folder)
         self.point_numbers = point_numbers
         self.files = []
         self.labels = []
@@ -20,7 +20,7 @@ class PointCloudDataset(Dataset):
         for file in subfolder.iterdir():
             if file.is_file() and file.suffix == ".ply":
                 self.files.append(file)
-                self.labels.append(file.stem)
+                self.labels.append(int(file.stem))
                 print(f"Loaded file: {file} with label: {file.stem}")
             else:
                 print(f"File is not a file or not a ply file ! : {file}")
